@@ -8,6 +8,10 @@ import { AuroraEffect } from '../effects/AuroraEffect';
 import { GalaxyEffect } from '../effects/GalaxyEffect';
 import { FireEffect } from '../effects/FireEffect';
 import { MeteorShowerEffect } from '../effects/MeteorShowerEffect';
+import { WaterRippleEffect } from '../effects/WaterRippleEffect';
+import { MagicEffect } from '../effects/MagicEffect';
+import { SmokeEffect } from '../effects/SmokeEffect';
+import { DNAEffect } from '../effects/DNAEffect';
 
 class ParticleSystem {
     constructor(options = {}) {
@@ -36,7 +40,11 @@ class ParticleSystem {
             aurora: AuroraEffect,
             galaxy: GalaxyEffect,
             fire: FireEffect,
-            meteorShower: MeteorShowerEffect
+            meteorShower: MeteorShowerEffect,
+            waterRipple: WaterRippleEffect,
+            magic: MagicEffect,
+            smoke: SmokeEffect,
+            dna: DNAEffect
         };
 
         // 绑定方法

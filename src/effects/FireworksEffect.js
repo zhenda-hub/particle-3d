@@ -21,6 +21,9 @@ export class FireworksEffect extends BaseEffect {
             transparent: true,
             vertexColors: true
         });
+        
+        // 创建一个空的粒子系统作为容器
+        this.points = new THREE.Points(this.geometry, this.material);
     }
 
     _createFirework(x, y, z) {
@@ -63,7 +66,9 @@ export class FireworksEffect extends BaseEffect {
         };
 
         // 将烟花添加到主网格中，而不是场景
-        this.mesh.add(firework.mesh);
+        if (this.points && this.points.parent) {
+            this.points.parent.add(firework.mesh);
+        }
         this.fireworks.push(firework);
     }
 
@@ -98,7 +103,10 @@ export class FireworksEffect extends BaseEffect {
 
             // 移除死亡的烟花
             if (firework.life <= 0) {
-                this.scene.remove(firework.mesh);
+                // 安全地从父对象中移除
+                if (firework.mesh.parent) {
+                    firework.mesh.parent.remove(firework.mesh);
+                }
                 firework.mesh.geometry.dispose();
                 this.fireworks.splice(i, 1);
             }
@@ -106,12 +114,19 @@ export class FireworksEffect extends BaseEffect {
     }
 
     dispose() {
-        super.dispose();
         // 清理所有烟花
         this.fireworks.forEach(firework => {
-            this.mesh.remove(firework.mesh);
-            firework.mesh.geometry.dispose();
+            // 安全地从父对象中移除
+            if (firework.mesh && firework.mesh.parent) {
+                firework.mesh.parent.remove(firework.mesh);
+            }
+            if (firework.mesh && firework.mesh.geometry) {
+                firework.mesh.geometry.dispose();
+            }
         });
         this.fireworks = [];
+        
+        // 调用父类的 dispose 方法
+        super.dispose();
     }
 }

@@ -102,10 +102,10 @@ export class MagicEffect extends BaseEffect {
         const fragmentShader = `
             varying vec3 vColor;
             varying float vAlpha;
-            uniform sampler2D texture;
+            uniform sampler2D particleTexture;
             
             void main() {
-                vec4 texColor = texture2D(texture, gl_PointCoord);
+                vec4 texColor = texture2D(particleTexture, gl_PointCoord);
                 if (texColor.a < 0.1) discard;
                 gl_FragColor = vec4(vColor * texColor.rgb, texColor.a * vAlpha);
             }
@@ -113,8 +113,8 @@ export class MagicEffect extends BaseEffect {
 
         this.material = new THREE.ShaderMaterial({
             uniforms: {
-                time: { value: 0.0 },
-                texture: { value: texture }
+                time: { value: 0 },
+                particleTexture: { value: texture },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -199,9 +199,10 @@ export class MagicEffect extends BaseEffect {
     }
 
     dispose() {
+        // 先调用父类的 dispose 方法
         super.dispose();
-        if (this.material.uniforms.texture.value) {
-            this.material.uniforms.texture.value.dispose();
-        }
+        
+        // 我们不需要在这里手动处理纹理的释放
+        // 因为父类的 dispose 方法已经处理了所有 uniforms
     }
 }

@@ -35,16 +35,56 @@ export class BaseEffect {
 
     updateOptions(options) {
         this.options = { ...this.options, ...options };
-        this.material.color.set(this.options.color);
-        this.material.size = this.options.size;
+        
+        // 检查材质是否有 color 属性
+        if (this.material && this.material.color && typeof this.material.color.set === 'function') {
+            this.material.color.set(this.options.color);
+        }
+        
+        // 检查材质是否有 size 属性
+        if (this.material && this.options.size !== undefined) {
+            this.material.size = this.options.size;
+        }
     }
 
     dispose() {
-        if (this.geometry) {
-            this.geometry.dispose();
-        }
-        if (this.material) {
-            this.material.dispose();
+        try {
+            if (this.material) {
+                // 处理材质的 uniforms 和纹理
+                if (this.material.uniforms) {
+                    // 安全地遍历所有 uniforms
+                    Object.keys(this.material.uniforms).forEach(key => {
+                        const uniform = this.material.uniforms[key];
+                        if (uniform && uniform.value && 
+                            typeof uniform.value.dispose === 'function') {
+                            try {
+                                uniform.value.dispose();
+                            } catch (e) {
+                                console.warn(`Error disposing uniform ${key}:`, e);
+                            }
+                        }
+                    });
+                }
+                
+                // 处理标准材质的 map
+                if (this.material.map && typeof this.material.map.dispose === 'function') {
+                    this.material.map.dispose();
+                }
+                
+                // 销毁材质
+                this.material.dispose();
+            }
+            
+            if (this.geometry) {
+                this.geometry.dispose();
+            }
+            
+            // 清除粒子系统
+            if (this.points && this.points.parent) {
+                this.points.parent.remove(this.points);
+            }
+        } catch (e) {
+            console.error('Error in dispose method:', e);
         }
     }
 }
