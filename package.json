@@ -1,0 +1,33 @@
+{
+  "name": "interactive-particle-system",
+  "version": "1.0.0",
+  "description": "Interactive 3D particle system based on Three.js",
+  "type": "module",
+  "main": "dist/particle-system.min.js",
+  "module": "dist/particle-system.esm.js",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "three.js",
+    "particles",
+    "3d",
+    "animation",
+    "webgl"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.9.0"
+  },
+  "peerDependencies": {
+    "three": "^0.160.0"
+  }
+}
