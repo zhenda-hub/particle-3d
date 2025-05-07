@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle System Test</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+
+    <!-- 使用UMD版本，不需要模块导入 -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="../dist/particle-system.min.js"></script>
+    
+    <script>
+        // 检查是否加载了库
+        console.log('THREE:', typeof THREE);
+        console.log('ParticleSystem:', typeof ParticleSystem);
+        
+        // 直接使用Three.js创建一个简单的场景
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+        
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+        
+        // 创建一个简单的立方体
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        
+        // 启动动画
+        animate();
+        
+        // 尝试创建粒子系统
+        try {
+            console.log('Trying to create particle system...');
+            const particleSystem = new ParticleSystem({
+                type: 'rain',
+                count: 1000
+            });
+            
+            console.log('Particle system created:', particleSystem);
+            particleSystem.init('#container');
+            console.log('Particle system initialized');
+        } catch (error) {
+            console.error('Error creating particle system:', error);
+        }
+    </script>
+</body>
+</html>
