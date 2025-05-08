@@ -26,13 +26,13 @@ export class MagicEffect extends BaseEffect {
         ];
 
         for (let i = 0; i < count; i++) {
-            // 在半球形区域内随机分布粒子
-            const radius = 5 + Math.random() * 5;
+            // 在半球形区域内随机分布粒子 - 增大范围
+            const radius = 15 + Math.random() * 15; // 将半径从 5-10 增加到 15-30
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.random() * Math.PI * 0.5;
 
             positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            positions[i * 3 + 1] = Math.random() * 2; // 从地面开始
+            positions[i * 3 + 1] = Math.random() * 10 - 5; // 增大高度范围
             positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
 
             // 随机选择颜色
@@ -41,11 +41,11 @@ export class MagicEffect extends BaseEffect {
             colors[i * 3 + 1] = color.g;
             colors[i * 3 + 2] = color.b;
 
-            // 随机大小
-            sizes[i] = 0.1 + Math.random() * 0.3;
+            // 随机大小 - 增大粒子大小
+            sizes[i] = 0.3 + Math.random() * 0.5;
 
-            // 随机速度和偏移
-            speeds[i] = 0.2 + Math.random() * 0.8;
+            // 随机速度和偏移 - 增大速度
+            speeds[i] = 0.5 + Math.random() * 1.5;
             offsets[i] = Math.random() * Math.PI * 2;
         }
 
@@ -124,7 +124,8 @@ export class MagicEffect extends BaseEffect {
             vertexColors: true
         });
 
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     _createMagicTexture() {

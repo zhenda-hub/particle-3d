@@ -6,7 +6,8 @@ export class BaseEffect {
         this.options = options;
         this.geometry = null;
         this.material = null;
-        this.mesh = null;
+        this.mesh = null;  // 保留兼容性
+        this.points = null; // 统一使用 points 属性
         this.particles = [];
         
         this._init();
@@ -26,7 +27,8 @@ export class BaseEffect {
         });
 
         // 创建实例化网格
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     update(delta) {

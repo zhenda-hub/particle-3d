@@ -73,11 +73,11 @@ export class FireworksEffect extends BaseEffect {
     }
 
     update(delta) {
-        // 随机创建新烟花
+        // 随机创建新烟花 - 增大分布范围
         if (Math.random() < 0.05 * this.options.speed) {
-            const x = (Math.random() - 0.5) * 10;
-            const y = -5 + Math.random() * 5;
-            const z = (Math.random() - 0.5) * 10;
+            const x = (Math.random() - 0.5) * 60; // 增大范围从 10 到 60
+            const y = -15 + Math.random() * 30;   // 增大高度范围
+            const z = (Math.random() - 0.5) * 60; // 增大范围从 10 到 60
             this._createFirework(x, y, z);
         }
 

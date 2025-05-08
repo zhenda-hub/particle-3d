@@ -14,15 +14,15 @@ export class SnowEffect extends BaseEffect {
         const rotations = new Float32Array(this.options.count);
 
         for (let i = 0; i < this.options.count; i++) {
-            // 随机位置
-            positions[i * 3] = Math.random() * 20 - 10;     // x
-            positions[i * 3 + 1] = Math.random() * 20 - 10; // y
-            positions[i * 3 + 2] = Math.random() * 20 - 10; // z
+            // 随机位置 - 增大分布范围
+            positions[i * 3] = Math.random() * 60 - 30;     // x: -30 到 30
+            positions[i * 3 + 1] = Math.random() * 60 - 30; // y: -30 到 30
+            positions[i * 3 + 2] = Math.random() * 60 - 30; // z: -30 到 30
 
             // 雪花速度 - 缓慢飘落
-            velocities[i * 3] = (Math.random() - 0.5) * 0.3;      // x方向随机
-            velocities[i * 3 + 1] = -1 - Math.random();           // y方向向下
-            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.3;  // z方向随机
+            velocities[i * 3] = (Math.random() - 0.5) * 0.5;      // x方向随机，增大浮动范围
+            velocities[i * 3 + 1] = -1.5 - Math.random() * 1.5;   // y方向向下，稍微增大速度
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.5;  // z方向随机，增大浮动范围
 
             // 旋转速度
             rotations[i] = Math.random() * Math.PI * 2;
@@ -70,10 +70,10 @@ export class SnowEffect extends BaseEffect {
             positions[i] += Math.sin(rotations[i / 3] + delta) * 0.1;
 
             // 如果雪花落到底部，重置到顶部
-            if (positions[i + 1] < -10) {
-                positions[i + 1] = 10;
-                positions[i] = Math.random() * 20 - 10;
-                positions[i + 2] = Math.random() * 20 - 10;
+            if (positions[i + 1] < -30) {
+                positions[i + 1] = 30;
+                positions[i] = Math.random() * 60 - 30;
+                positions[i + 2] = Math.random() * 60 - 30;
             }
 
             // 更新旋转

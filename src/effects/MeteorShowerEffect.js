@@ -57,15 +57,15 @@ export class MeteorShowerEffect extends BaseEffect {
         const colors = new Float32Array(particleCount * 3);
         const sizes = new Float32Array(particleCount);
         
-        // 流星起始位置
-        const startX = (Math.random() - 0.5) * 30;
-        const startY = 15 + Math.random() * 10;
-        const startZ = (Math.random() - 0.5) * 30;
+        // 流星起始位置 - 增大范围
+        const startX = (Math.random() - 0.5) * 60; // 增大宽度到 60
+        const startY = 30 + Math.random() * 20;    // 增大高度到 30-50
+        const startZ = (Math.random() - 0.5) * 60; // 增大深度到 60
         
-        // 流星方向 - 主要向下
-        const dirX = (Math.random() - 0.5) * 2;
-        const dirY = -3 - Math.random() * 2;
-        const dirZ = (Math.random() - 0.5) * 2;
+        // 流星方向 - 主要向下，增大速度
+        const dirX = (Math.random() - 0.5) * 5;    // 增大水平速度
+        const dirY = -8 - Math.random() * 4;       // 增大垂直速度
+        const dirZ = (Math.random() - 0.5) * 5;    // 增大水平速度
         
         // 流星颜色
         const color = new THREE.Color(0xffffff);

@@ -23,21 +23,21 @@ export class WaterRippleEffect extends BaseEffect {
 
         // 创建水面网格
         for (let i = 0; i < count; i++) {
-            // 在圆形区域内均匀分布粒子
+            // 在圆形区域内均匀分布粒子 - 增大范围
             const angle = Math.random() * Math.PI * 2;
-            const distance = Math.sqrt(Math.random()) * 10; // 平方根分布使粒子更均匀
+            const distance = Math.sqrt(Math.random()) * 30; // 将半径从 10 增加到 30
             distances[i] = distance;
             
             positions[i * 3] = Math.cos(angle) * distance;
             positions[i * 3 + 1] = 0; // 初始高度为0
             positions[i * 3 + 2] = Math.sin(angle) * distance;
 
-            // 随机相位和振幅
+            // 随机相位和振幅 - 增大振幅
             phases[i] = Math.random() * Math.PI * 2;
-            amplitudes[i] = 0.1 + Math.random() * 0.2;
+            amplitudes[i] = 0.3 + Math.random() * 0.5; // 增大振幅使波纹更明显
 
             // 颜色 - 从中心到边缘渐变
-            const colorFactor = distance / 10;
+            const colorFactor = distance / 30; // 调整为新的半径
             const color = waterColor1.clone().lerp(waterColor2, colorFactor);
             colors[i * 3] = color.r;
             colors[i * 3 + 1] = color.g;
@@ -106,7 +106,8 @@ export class WaterRippleEffect extends BaseEffect {
             vertexColors: true
         });
 
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     update(delta) {

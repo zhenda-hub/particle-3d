@@ -5,13 +5,12 @@ import { RainEffect } from '../effects/RainEffect';
 import { SnowEffect } from '../effects/SnowEffect';
 import { FireworksEffect } from '../effects/FireworksEffect';
 import { AuroraEffect } from '../effects/AuroraEffect';
-import { GalaxyEffect } from '../effects/GalaxyEffect';
-import { FireEffect } from '../effects/FireEffect';
-import { MeteorShowerEffect } from '../effects/MeteorShowerEffect';
+// 删除了星系、火焰和流星雨效果的引用
 import { WaterRippleEffect } from '../effects/WaterRippleEffect';
 import { MagicEffect } from '../effects/MagicEffect';
 import { SmokeEffect } from '../effects/SmokeEffect';
 import { DNAEffect } from '../effects/DNAEffect';
+import { SolarSystemEffect } from '../effects/SolarSystemEffect';
 
 class ParticleSystem {
     constructor(options = {}) {
@@ -32,19 +31,20 @@ class ParticleSystem {
         this.isRunning = false;
         this.clock = new THREE.Clock();
 
-        // 效果映射表
+        // 效果映射表 - 删除了星系、火焰和流星雨效果
         this.effects = {
             rain: RainEffect,
             snow: SnowEffect,
             fireworks: FireworksEffect,
             aurora: AuroraEffect,
-            galaxy: GalaxyEffect,
-            fire: FireEffect,
-            meteorShower: MeteorShowerEffect,
+            // galaxy: GalaxyEffect, // 已删除
+            // fire: FireEffect, // 已删除
+            // meteorShower: MeteorShowerEffect, // 已删除
             waterRipple: WaterRippleEffect,
             magic: MagicEffect,
             smoke: SmokeEffect,
-            dna: DNAEffect
+            dna: DNAEffect,
+            solarSystem: SolarSystemEffect
         };
 
         // 绑定方法
@@ -88,7 +88,8 @@ class ParticleSystem {
             0.1,
             1000
         );
-        this.camera.position.z = 5;
+        // 增加相机距离，使所有效果都能全屏显示
+        this.camera.position.z = 30;
 
         // 创建渲染器
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -98,21 +99,49 @@ class ParticleSystem {
     }
 
     setEffect(type) {
+        // 检查效果类型是否有效
         if (!this.effects[type]) {
             console.warn(`Effect type '${type}' not found, falling back to 'rain'`);
             type = 'rain';
         }
 
-        // 清理当前效果
+        // 清除当前效果
         if (this.currentEffect) {
+            // 安全地从场景中移除当前效果
+            if (this.currentEffect.points && this.currentEffect.points.parent) {
+                this.currentEffect.points.parent.remove(this.currentEffect.points);
+            } else if (this.currentEffect.mesh && this.currentEffect.mesh.parent) {
+                this.currentEffect.mesh.parent.remove(this.currentEffect.mesh);
+            }
+            
+            // 释放资源
             this.currentEffect.dispose();
-            this.scene.remove(this.currentEffect.mesh);
         }
+        
+        // 重置相机位置到默认值
+        this.camera.position.set(0, 0, 30);
+        this.camera.lookAt(0, 0, 0);
 
         // 创建新效果
-        const EffectClass = this.effects[type];
-        this.currentEffect = new EffectClass(this.options);
-        this.scene.add(this.currentEffect.mesh);
+        const effectOptions = {
+            ...this.options,
+            scene: this.scene,  // 传递场景引用
+            camera: this.camera // 传递相机引用
+        };
+        
+        this.currentEffect = new this.effects[type](effectOptions);
+        
+        // 安全地将效果添加到场景中
+        if (type !== 'solarSystem') { // 太阳系效果已在其初始化方法中自己添加到场景
+            // 兼容不同的效果实现，有的用 points，有的用 mesh
+            if (this.currentEffect.points) {
+                this.scene.add(this.currentEffect.points);
+            } else if (this.currentEffect.mesh) {
+                this.scene.add(this.currentEffect.mesh);
+            }
+        }
+
+        console.log('Effect changed to:', type);
     }
 
     updateOptions(newOptions) {
@@ -129,7 +158,24 @@ class ParticleSystem {
 
         const delta = this.clock.getDelta();
         if (this.currentEffect) {
+            // 更新当前效果
             this.currentEffect.update(delta);
+            
+            // 更新着色器的时间参数，如果有的话
+            if (this.currentEffect.material && this.currentEffect.material.uniforms && 
+                this.currentEffect.material.uniforms.time) {
+                this.currentEffect.material.uniforms.time.value += delta;
+            }
+            
+            // 如果有自定义的粒子系统，也更新它们
+            if (this.currentEffect.particles) {
+                for (let particle of this.currentEffect.particles) {
+                    if (particle.material && particle.material.uniforms && 
+                        particle.material.uniforms.time) {
+                        particle.material.uniforms.time.value += delta;
+                    }
+                }
+            }
         }
 
         this.renderer.render(this.scene, this.camera);

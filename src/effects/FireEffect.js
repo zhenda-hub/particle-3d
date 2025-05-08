@@ -23,16 +23,16 @@ export class FireEffect extends BaseEffect {
         const colorTip = new THREE.Color(0xffff00);   // 黄色
 
         for (let i = 0; i < count; i++) {
-            // 初始位置 - 在底部区域随机生成
+            // 初始位置 - 在底部区域随机生成 - 增大范围
             const i3 = i * 3;
-            positions[i3] = (Math.random() - 0.5) * 2;
-            positions[i3 + 1] = 0;
-            positions[i3 + 2] = (Math.random() - 0.5) * 2;
+            positions[i3] = (Math.random() - 0.5) * 20; // 增大宽度到 20
+            positions[i3 + 1] = -10; // 低于视野中心
+            positions[i3 + 2] = (Math.random() - 0.5) * 20; // 增大深度到 20
 
             // 初始速度 - 主要向上，带有一些随机性
-            velocities[i3] = (Math.random() - 0.5) * 0.5;
-            velocities[i3 + 1] = 2 + Math.random() * 2;
-            velocities[i3 + 2] = (Math.random() - 0.5) * 0.5;
+            velocities[i3] = (Math.random() - 0.5) * 1.5; // 增大水平浮动
+            velocities[i3 + 1] = 5 + Math.random() * 5;   // 增大垂直速度
+            velocities[i3 + 2] = (Math.random() - 0.5) * 1.5; // 增大水平浮动
 
             // 随机生命周期
             lifetimes[i] = Math.random();
@@ -106,7 +106,8 @@ export class FireEffect extends BaseEffect {
             vertexColors: true
         });
 
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     update(delta) {

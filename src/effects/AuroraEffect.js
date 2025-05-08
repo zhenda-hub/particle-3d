@@ -25,13 +25,13 @@ export class AuroraEffect extends BaseEffect {
         ];
 
         for (let i = 0; i < count; i++) {
-            // 在半球形区域内分布粒子
+            // 在半球形区域内分布粒子 - 增大范围
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.random() * Math.PI * 0.5;
-            const r = 5 + Math.random() * 5;
+            const r = 15 + Math.random() * 15; // 显著增大半径
 
             positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-            positions[i * 3 + 1] = r * Math.cos(phi) + 5; // 向上偏移
+            positions[i * 3 + 1] = r * Math.cos(phi) + 10; // 向上偏移更多
             positions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
 
             // 随机选择颜色
@@ -107,7 +107,8 @@ export class AuroraEffect extends BaseEffect {
             vertexColors: true
         });
 
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     update(delta) {

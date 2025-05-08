@@ -146,6 +146,15 @@ const system = new ParticleSystem(options)
 - Safari
 - Edge
 
-## 许可证
 
-MIT
+
+雨 (Rain)
+雪 (Snow)
+烟花 (Fireworks)
+极光 (Aurora)
+水波纹 (Water Ripple)
+魔法粒子 (Magic)
+烟雾 (Smoke)
+DNA螺旋 (DNA)
+太阳系 (Solar System) 
+

@@ -21,18 +21,18 @@ export class SmokeEffect extends BaseEffect {
         const smokeColor = new THREE.Color(0x888888);
 
         for (let i = 0; i < count; i++) {
-            // 初始化粒子位置 - 在底部区域随机生成
-            positions[i * 3] = (Math.random() - 0.5) * 3;
-            positions[i * 3 + 1] = 0;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 3;
+            // 初始化粒子位置 - 在底部区域随机生成 - 增大范围
+            positions[i * 3] = (Math.random() - 0.5) * 20;  // 增大宽度到 20
+            positions[i * 3 + 1] = -10;                    // 低于视野中心
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;  // 增大深度到 20
 
-            // 初始化粒子速度 - 主要向上，带有一些随机性
-            velocities[i * 3] = (Math.random() - 0.5) * 0.3;
-            velocities[i * 3 + 1] = 0.5 + Math.random() * 0.5;
-            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.3;
+            // 初始化粒子速度 - 主要向上，带有一些随机性 - 增大速度
+            velocities[i * 3] = (Math.random() - 0.5) * 1.0;   // 增大水平浮动
+            velocities[i * 3 + 1] = 1.5 + Math.random() * 1.5; // 增大垂直速度
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 1.0; // 增大水平浮动
 
-            // 初始化粒子大小 - 随着上升会变大
-            sizes[i] = 0.2 + Math.random() * 0.3;
+            // 初始化粒子大小 - 随着上升会变大 - 增大粒子大小
+            sizes[i] = 0.5 + Math.random() * 0.8;
 
             // 初始化生命周期和不透明度
             lifetimes[i] = Math.random();
@@ -59,7 +59,8 @@ export class SmokeEffect extends BaseEffect {
             color: smokeColor
         });
 
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     _createSmokeTexture() {

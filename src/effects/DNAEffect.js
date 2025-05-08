@@ -22,10 +22,10 @@ export class DNAEffect extends BaseEffect {
         const baseColor1 = new THREE.Color(0x00ff88); // 绿色
         const baseColor2 = new THREE.Color(0xff0088); // 粉色
 
-        // DNA参数
-        const dnaLength = 20;       // DNA长度
-        const dnaRadius = 2;        // DNA半径
-        const dnaWindings = 10;     // 螺旋圈数
+        // DNA参数 - 增大范围
+        const dnaLength = 60;       // 增大DNA长度从 20 到 60
+        const dnaRadius = 6;        // 增大DNA半径从 2 到 6
+        const dnaWindings = 15;     // 增加螺旋圈数从 10 到 15
         const basePairsPerWinding = count / (dnaWindings * 2); // 每圈碱基对数量
 
         for (let i = 0; i < count; i++) {
@@ -129,7 +129,8 @@ export class DNAEffect extends BaseEffect {
             vertexColors: true
         });
 
-        this.mesh = new THREE.Points(this.geometry, this.material);
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.mesh = this.points; // 兼容旧代码
     }
 
     update(delta) {

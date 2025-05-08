@@ -13,15 +13,15 @@ export class RainEffect extends BaseEffect {
         const velocities = new Float32Array(this.options.count * 3);
 
         for (let i = 0; i < this.options.count; i++) {
-            // 随机位置
-            positions[i * 3] = Math.random() * 20 - 10;     // x
-            positions[i * 3 + 1] = Math.random() * 20 - 10; // y
-            positions[i * 3 + 2] = Math.random() * 20 - 10; // z
+            // 随机位置 - 增大分布范围
+            positions[i * 3] = Math.random() * 60 - 30;     // x: -30 到 30
+            positions[i * 3 + 1] = Math.random() * 60 - 30; // y: -30 到 30
+            positions[i * 3 + 2] = Math.random() * 60 - 30; // z: -30 到 30
 
             // 雨滴速度 - 主要是向下运动
-            velocities[i * 3] = (Math.random() - 0.5) * 0.1;      // x方向小幅随机
-            velocities[i * 3 + 1] = -3 - Math.random() * 2;       // y方向向下
-            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;  // z方向小幅随机
+            velocities[i * 3] = (Math.random() - 0.5) * 0.2;      // x方向小幅随机
+            velocities[i * 3 + 1] = -5 - Math.random() * 3;       // y方向向下，增大速度
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.2;  // z方向小幅随机
         }
 
         this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -40,10 +40,10 @@ export class RainEffect extends BaseEffect {
             positions[i + 2] += velocities[i + 2] * speed * delta;
 
             // 如果雨滴落到底部，重置到顶部
-            if (positions[i + 1] < -10) {
-                positions[i + 1] = 10;
-                positions[i] = Math.random() * 20 - 10;
-                positions[i + 2] = Math.random() * 20 - 10;
+            if (positions[i + 1] < -30) {
+                positions[i + 1] = 30;
+                positions[i] = Math.random() * 60 - 30;
+                positions[i + 2] = Math.random() * 60 - 30;
             }
         }
 
