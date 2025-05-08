@@ -589,13 +589,14 @@ export class SolarSystemEffect extends BaseEffect {
     
     _createOrbits() {
         // 为每个行星创建轨道线
-        this.planets.forEach(planet => {
+        this.planets.forEach((planet, index) => {
             const distance = planet.userData.distance;
+            const planetName = planet.userData.name;
             const orbitGeometry = new THREE.BufferGeometry();
             
             // 创建圆形轨道点
             const points = [];
-            const segments = 128;
+            const segments = 256; // 增加线段数量使轨道更平滑
             for (let i = 0; i <= segments; i++) {
                 const angle = (i / segments) * Math.PI * 2;
                 const x = Math.cos(angle) * distance;
@@ -605,15 +606,92 @@ export class SolarSystemEffect extends BaseEffect {
             
             orbitGeometry.setFromPoints(points);
             
+            // 为每个行星使用不同颜色的轨道
+            const colors = [
+                0x4fc3f7, // 水星 - 浅蓝色
+                0xffb74d, // 金星 - 橙色
+                0x4caf50, // 地球 - 绿色
+                0xef5350, // 火星 - 红色
+                0xffd54f, // 木星 - 金黄色
+                0xffca28, // 土星 - 淡黄色
+                0x81d4fa, // 天王星 - 浅蓝色
+                0x4db6ac  // 海王星 - 青绿色
+            ];
+            
             const orbitMaterial = new THREE.LineBasicMaterial({
-                color: 0x444444,
+                color: colors[index] || 0x888888,
                 transparent: true,
-                opacity: 0.3
+                opacity: 0.6,
+                linewidth: 2 // 注意：WebGL中线宽度可能不生效
             });
             
             const orbit = new THREE.Line(orbitGeometry, orbitMaterial);
             this.orbits.push(orbit);
             this.planetGroup.add(orbit);
+            
+            // 创建行星名称标签
+            this._createPlanetLabel(planetName, distance);
+        });
+    }
+    
+    // 创建行星名称标签
+    _createPlanetLabel(name, distance) {
+        // 创建画布用于生成文本纹理
+        const canvas = document.createElement('canvas');
+        canvas.width = 512; // 增大画布尺寸
+        canvas.height = 128;
+        const context = canvas.getContext('2d');
+        
+        // 添加背景框以增强可读性
+        context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        context.fillRect(0, 0, 512, 128);
+        context.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        context.lineWidth = 4;
+        context.strokeRect(10, 10, 492, 108);
+        
+        // 设置文本样式
+        context.font = 'Bold 64px Arial';
+        context.fillStyle = 'white';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(name, 256, 64);
+        
+        // 创建纹理
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.needsUpdate = true;
+        
+        // 创建材质
+        const material = new THREE.SpriteMaterial({
+            map: texture,
+            transparent: true,
+            opacity: 1.0 // 增强不透明度
+        });
+        
+        // 创建精灵并设置位置
+        const sprite = new THREE.Sprite(material);
+        
+        // 根据行星距离调整标签位置
+        const angle = Math.random() * Math.PI * 0.5; // 随机角度，避免所有标签重叠
+        sprite.position.set(
+            Math.cos(angle) * (distance + 5),
+            3, // 稍微升高，使标签更明显
+            Math.sin(angle) * (distance + 5)
+        );
+        
+        // 调整标签大小，距离越远的行星标签越大
+        const scaleFactor = 0.15 + (distance / 60) * 0.1; // 根据距离调整大小
+        sprite.scale.set(scaleFactor * 10, scaleFactor * 2.5, 1);
+        
+        // 添加到行星组
+        this.planetGroup.add(sprite);
+        
+        // 将标签添加到数组中，便于后续更新
+        if (!this.labels) this.labels = [];
+        this.labels.push({
+            sprite: sprite,
+            distance: distance,
+            angle: angle,
+            name: name
         });
     }
 
@@ -628,6 +706,20 @@ export class SolarSystemEffect extends BaseEffect {
         // 更新太阳自转
         if (this.sun) {
             this.sun.rotation.y += delta * 0.2; // 太阳缓慢自转
+        }
+        
+        // 更新行星名称标签，使其始终面向相机
+        if (this.labels && this.options.camera) {
+            this.labels.forEach(label => {
+                // 更新标签位置，跟随行星运动
+                const planet = this.planets.find(p => p.userData.name === label.name);
+                if (planet) {
+                    // 将标签放在行星上方
+                    label.sprite.position.x = planet.position.x;
+                    label.sprite.position.z = planet.position.z;
+                    label.sprite.position.y = planet.position.y + planet.userData.size * 2 + 1;
+                }
+            });
         }
         
         // 更新行星位置
