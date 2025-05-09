@@ -140,7 +140,7 @@
             <button onclick="setEffect('magic')">Magic</button>
             <button onclick="setEffect('smoke')">Smoke</button>
             <button onclick="setEffect('dna')">DNA</button>
-            <button onclick="setEffect('solarSystem')" style="background: #1E88E5;">Solar</button>
+            <button onclick="setEffect('solarSystem')">Solar</button>
         </div>
         
         <div class="control-section">
@@ -193,6 +193,9 @@
                 
                 window.particleSystem.init('#particle-container');
                 console.log('Particle system initialized successfully');
+                
+                // 初始化时设置默认选中的按钮样式
+                setTimeout(() => setEffect('rain'), 100);
             } catch (error) {
                 console.error('Error initializing particle system:', error);
             }
@@ -203,6 +206,24 @@
             if (window.particleSystem) {
                 window.particleSystem.setEffect(type);
                 console.log('Effect changed to:', type);
+                
+                // 更新按钮样式，当前选中为蓝色，非选中为白色
+                const buttons = document.querySelectorAll('.effect-buttons button');
+                buttons.forEach(button => {
+                    // 重置所有按钮样式
+                    button.style.background = '#555';
+                    button.style.color = 'white';
+                });
+                
+                // 设置当前选中按钮样式为蓝色
+                const currentButton = Array.from(buttons).find(button => {
+                    return button.textContent.toLowerCase() === type.replace(/([A-Z])/g, ' $1').toLowerCase() ||
+                           (button.textContent === 'Solar' && type === 'solarSystem');
+                });
+                
+                if (currentButton) {
+                    currentButton.style.background = '#1E88E5';
+                }
                 
                 // 如果是太阳系效果，显示相机控制按钮
                 const cameraControls = document.getElementById('camera-controls');
