@@ -4,7 +4,7 @@
 
 ## 特性
 
-- 🎨 多种内置粒子效果（雨、雪、烟花、极光、水波纹、魔法粒子、烟雾、DNA螺旋、太阳系）
+- 🎨 多种内置粒子效果（雨、雪、烟花、极光、水波纹、魔法粒子、太阳系）
 - 🎮 支持鼠标/触摸交互
 - 📱 响应式设计，自适应容器大小
 - 🔧 丰富的配置选项
@@ -157,7 +157,5 @@ const system = new ParticleSystem(options)
 极光 (Aurora)
 水波纹 (Water Ripple)
 魔法粒子 (Magic)
-烟雾 (Smoke)
-DNA螺旋 (DNA)
 太阳系 (Solar System) 
 

@@ -8,8 +8,6 @@ import { AuroraEffect } from '../effects/AuroraEffect';
 // 删除了星系、火焰和流星雨效果的引用
 import { WaterRippleEffect } from '../effects/WaterRippleEffect';
 import { MagicEffect } from '../effects/MagicEffect';
-import { SmokeEffect } from '../effects/SmokeEffect';
-import { DNAEffect } from '../effects/DNAEffect';
 import { SolarSystemEffect } from '../effects/SolarSystemEffect';
 
 class ParticleSystem {
@@ -42,8 +40,8 @@ class ParticleSystem {
             // meteorShower: MeteorShowerEffect, // 已删除
             waterRipple: WaterRippleEffect,
             magic: MagicEffect,
-            smoke: SmokeEffect,
-            dna: DNAEffect,
+            // smoke: SmokeEffect, // 已删除
+            // dna: DNAEffect, // 已删除
             solarSystem: SolarSystemEffect
         };
 
