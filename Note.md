@@ -1,7 +1,5 @@
 # Interactive Particle System (particle-3d)
 
-## 介绍
-
 一个基于 Three.js 的交互式 3D 粒子系统，可以轻松集成到任何 Web 项目中。支持多种粒子效果（雨、雪、烟花等），并提供丰富的自定义选项。
 
 ## 特性
@@ -13,9 +11,29 @@
 - 🎯 易于集成到任何 Web 项目
 - ⚡ 优化的性能（使用 Three.js InstancedMesh）
 
-## 示例
+## 安装
 
-### 基础使用示例
+### 使用 npm
+
+```bash
+# npm install interactive-particle-system
+npm install
+npm run build
+
+```
+
+### 使用 CDN
+
+```html
+<!-- 先引入 Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- 再引入粒子系统 -->
+<script src="https://unpkg.com/interactive-particle-system@latest/dist/particle-system.min.js"></script>
+```
+
+## 使用方法
+
+### 1. 在普通 HTML 项目中使用
 
 ```html
 <!-- 1. 创建容器 -->
@@ -43,7 +61,7 @@
 </script>
 ```
 
-### Vue 项目中使用示例
+### 2. 在 Vue 项目中使用
 
 ```vue
 <!-- ParticleComponent.vue -->
@@ -77,76 +95,67 @@ export default {
 </script>
 ```
 
-## 快速开始
-
-### 安装
-
-#### 使用 npm
-
-```bash
-npm install interactive-particle-system
+使用组件：
+```vue
+<template>
+    <ParticleComponent 
+        type="snow"
+        :options="{
+            count: 2000,
+            speed: 1.5,
+            color: '#ffffff'
+        }"
+    />
+</template>
 ```
 
-#### 使用 CDN
+## 配置选项
 
-```html
-<!-- 先引入 Three.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<!-- 再引入粒子系统 -->
-<script src="https://unpkg.com/interactive-particle-system@latest/dist/particle-system.min.js"></script>
-```
+| 选项 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| type | string | 'rain' | 粒子效果类型：'rain', 'snow', 'fireworks' |
+| count | number | 1000 | 粒子数量 |
+| speed | number | 1.0 | 粒子移动速度 |
+| size | number | 0.1 | 粒子大小 |
+| color | string | '#ffffff' | 粒子颜色 |
 
-### 基本用法
+## API
 
-1. 创建一个容器元素
-2. 初始化粒子系统
-3. 配置粒子效果
+### ParticleSystem
 
+#### 构造函数
 ```javascript
-const particleSystem = new ParticleSystem({
-    type: 'snow',
-    count: 2000,
-    speed: 1.5,
-    size: 0.08,
-    color: '#ffffff'
-});
-particleSystem.init('#container');
+const system = new ParticleSystem(options)
 ```
 
-## 参与贡献
+#### 方法
 
-欢迎贡献代码！请遵循以下步骤：
+- `init(container)`: 初始化粒子系统
+  - `container`: DOM元素或选择器字符串
 
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启一个 Pull Request
+- `setEffect(type)`: 切换粒子效果
+  - `type`: 'rain' | 'snow' | 'fireworks'
 
-## 问题反馈
+- `updateOptions(options)`: 更新配置
+  - `options`: 部分或全部配置项
 
-如果您遇到任何问题或有建议，请通过以下方式反馈：
+- `destroy()`: 销毁粒子系统，释放资源
 
-1. 在 GitHub Issues 中创建新的 issue
-2. 描述详细的问题现象和复现步骤
-3. 提供浏览器版本和操作系统信息
+## 浏览器支持
 
-## 许可证
+支持所有现代浏览器（需要 WebGL 支持）：
+- Chrome
+- Firefox
+- Safari
+- Edge
 
-本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-## 致谢
 
-- 感谢 [Three.js](https://threejs.org/) 提供的强大 3D 渲染引擎
-- 感谢所有贡献者和用户的支持
-- 灵感来源于各种优秀的粒子效果实现
+雨 (Rain)
+雪 (Snow)
+烟花 (Fireworks)
+极光 (Aurora)
+水波纹 (Water Ripple)
+魔法粒子 (Magic)
+太阳系 (Solar System) 
 
-## 支持的粒子效果
-
-- 🌧️ 雨 (Rain)
-- ❄️ 雪 (Snow)
-- 🎆 烟花 (Fireworks)
-- 🌌 极光 (Aurora)
-- 💧 水波纹 (Water Ripple)
-- ✨ 魔法粒子 (Magic)
-- 🌞 太阳系 (Solar System)
